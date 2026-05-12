@@ -67,15 +67,9 @@ jobs:
           MVND_DIR="maven-mvnd-${MVND_VERSION}-${MVND_OS}-${MVND_ARCH}"
           MVND_URL="https://downloads.apache.org/maven/mvnd/${MVND_VERSION}/${MVND_DIR}.zip"
           echo "Downloading mvnd ${MVND_VERSION} for ${MVND_OS}/${MVND_ARCH}..."
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            curl -fsSL "$MVND_URL" -o "$RUNNER_TEMP\\mvnd.zip"
-            unzip -q "$RUNNER_TEMP\\mvnd.zip" -d "$RUNNER_TEMP\\mvnd-cache"
-            echo "$RUNNER_TEMP\\mvnd-cache\\${MVND_DIR}\\bin" >> "$GITHUB_PATH"
-          else
-            curl -fsSL "$MVND_URL" -o "$RUNNER_TEMP/mvnd.zip"
-            unzip -q "$RUNNER_TEMP/mvnd.zip" -d "$RUNNER_TEMP/mvnd-cache"
-            echo "$RUNNER_TEMP/mvnd-cache/${MVND_DIR}/bin" >> "$GITHUB_PATH"
-          fi
+          curl -fsSL "$MVND_URL" -o "$RUNNER_TEMP/mvnd.zip"
+          unzip -q "$RUNNER_TEMP/mvnd.zip" -d "$RUNNER_TEMP/mvnd-cache"
+          echo "$RUNNER_TEMP/mvnd-cache/${MVND_DIR}/bin" >> "$GITHUB_PATH"
 
       - name: Print Maven Daemon version
         run: mvnd -version
