@@ -77,7 +77,7 @@ jobs:
           curl -fsSL "${MVND_URL}.sha256" -o "$RUNNER_TEMP/mvnd.zip.sha256"
           echo "Verifying download..."
           EXPECTED=$(cut -d' ' -f1 "$RUNNER_TEMP/mvnd.zip.sha256")
-          ACTUAL=$(sha256sum "$RUNNER_TEMP/mvnd.zip" | cut -d' ' -f1 | tr -d '\')
+          ACTUAL=$(sha256sum "$RUNNER_TEMP/mvnd.zip" | cut -d' ' -f1)
           if [ "$EXPECTED" != "$ACTUAL" ]; then
             echo "Checksum mismatch! Expected: $EXPECTED, got: $ACTUAL"
             exit 1
