@@ -1,0 +1,69 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-24.04       # Linux, X64
+          - ubuntu-24.04-arm   # Linux, ARM64
+          - macos-26-intel     # macOS, X64 (Intel)
+          - macos-26           # macOS, ARM64 (Apple Silicon)
+          - windows-latest     # Windows, X64
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Maven Daemon
+        shell: bash
+        env:
+          MVND_VERSION: '1.0.5'
+        run: |
+          case "${{ runner.os }}" in
+            Linux)   MVND_OS=linux ;;
+            macOS)   MVND_OS=darwin ;;
+            Windows) MVND_OS=windows ;;
+            *)       echo "Unsupported OS: ${{ runner.os }}"; exit 1 ;;
+          esac
+          case "${{ runner.arch }}" in
+            X64)   MVND_ARCH=amd64 ;;
+            ARM64) MVND_ARCH=aarch64 ;;
+            *)     echo "Unsupported arch: ${{ runner.arch }}"; exit 1 ;;
+          esac
+          MVND_DIR="maven-mvnd-${MVND_VERSION}-${MVND_OS}-${MVND_ARCH}"
+          MVND_URL="https://downloads.apache.org/maven/mvnd/${MVND_VERSION}/${MVND_DIR}.zip"
+          echo "Downloading mvnd ${MVND_VERSION} for ${MVND_OS}/${MVND_ARCH}..."
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            curl -fsSL "$MVND_URL" -o "$RUNNER_TEMP\\mvnd.zip"
+            unzip -q "$RUNNER_TEMP\\mvnd.zip" -d "$RUNNER_TEMP\\mvnd-cache"
+            echo "$RUNNER_TEMP\\mvnd-cache\\${MVND_DIR}\\bin" >> "$GITHUB_PATH"
+          else
+            curl -fsSL "$MVND_URL" -o "$RUNNER_TEMP/mvnd.zip"
+            unzip -q "$RUNNER_TEMP/mvnd.zip" -d "$RUNNER_TEMP/mvnd-cache"
+            echo "$RUNNER_TEMP/mvnd-cache/${MVND_DIR}/bin" >> "$GITHUB_PATH"
+          fi
+
+      - name: Print Maven Daemon version
+        run: mvnd -version
+
+      - name: Build with Maven Daemon
+        run: mvnd clean package
