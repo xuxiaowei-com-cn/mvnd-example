@@ -10,9 +10,9 @@ name: Java CI with Maven Daemon
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "xuxiaowei/**" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "xuxiaowei/**" ]
 
 permissions:
   contents: read
