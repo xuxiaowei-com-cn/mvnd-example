@@ -52,7 +52,8 @@ jobs:
         shell: bash
         env:
           MVND_VERSION: '1.0.5'
-          MVND_BASE_URL: 'https://downloads.apache.org/maven/mvnd'
+          # MVND_BASE_URL: 'https://downloads.apache.org/maven/mvnd'
+          MVND_BASE_URL: 'https://github.com/apache/maven-mvnd/releases/download'
         run: |
           case "${{ runner.os }}" in
             Linux)   MVND_OS=linux ;;
