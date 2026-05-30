@@ -54,7 +54,7 @@ jobs:
       - name: Set up Maven Daemon
         shell: bash
         env:
-          MVND_VERSION: '1.0.5'
+          MVND_VERSION: '1.0.6'
           # The download speed from downloads.apache.org and archive.apache.org can sometimes be very slow.
           # MVND_BASE_URL: 'https://downloads.apache.org/maven/mvnd'
           # MVND_BASE_URL: 'https://archive.apache.org/dist/maven/mvnd'
