@@ -82,7 +82,7 @@ jobs:
           # curl -fsSL --retry 3 --retry-delay 5 --retry-connrefused "${MVND_URL}.sha256" -o "$RUNNER_TEMP/mvnd.zip.sha256"
           RELEASE_API="https://api.github.com/repos/apache/maven-mvnd/releases/tags/${MVND_VERSION}"
           echo "Fetching expected checksum from GitHub API..."                                                                                                           
-          EXPECTED=$(curl -fsSL --retry 3 --retry-delay 5 "$RELEASE_API" | jq -r --arg name "$MVND_ZIP" '.assets[] | select(.name == $name) | .digest' | sed 's/^sha256://')
+          EXPECTED=$(curl -fsSL --retry 3 --retry-delay 5 -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "$RELEASE_API" | jq -r --arg name "$MVND_ZIP" '.assets[] | select(.name == $name) | .digest' | sed 's/^sha256://')
           echo "Verifying download..."
           # EXPECTED=$(cut -d' ' -f1 "$RUNNER_TEMP/mvnd.zip.sha256")
           ACTUAL=$(sha256sum "$RUNNER_TEMP/mvnd.zip" | cut -d' ' -f1 | tr -d '\\')
